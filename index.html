@@ -1,1 +1,155 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Simbología Unifilar</title>
+    <style>
+        :root { --primary: #2563eb; --success: #22c55e; --error: #ef4444; --bg: #f8fafc; --text: #1e293b; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .container { width: 100%; max-width: 600px; text-align: center; }
+        .progress { margin-bottom: 15px; font-weight: bold; color: #64748b; font-size: 1.1rem; }
+        .image-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; min-height: 200px; display: flex; justify-content: center; align-items: center; border: 2px solid #e2e8f0; }
+        .quiz-img { max-width: 100%; max-height: 280px; object-fit: contain; }
+        .options-grid { display: grid; gap: 12px; grid-template-columns: 1fr; }
+        @media (min-width: 480px) { .options-grid { grid-template-columns: 1fr 1fr; } }
+        button { padding: 18px 10px; font-size: 0.95rem; border: 2px solid #e2e8f0; border-radius: 12px; background: white; cursor: pointer; transition: all 0.2s; color: var(--text); font-weight: 500; }
+        button:hover:not(:disabled) { border-color: var(--primary); background: #eff6ff; transform: translateY(-2px); }
+        button:disabled { cursor: default; }
+        button.correct { background: var(--success) !important; color: white; border-color: var(--success); }
+        button.incorrect { background: var(--error) !important; color: white; border-color: var(--error); }
+        #next-btn { margin-top: 25px; background: var(--primary); color: white; border: none; padding: 15px 50px; border-radius: 30px; cursor: pointer; display: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }
+        .results-screen { display: none; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .percentage { font-size: 3.5rem; font-weight: bold; color: var(--primary); margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="quiz-container">
+        <div class="progress">Pregunta <span id="current-idx">1</span> de 57</div>
+        <div class="image-box" id="image-box"></div>
+        <div class="options-grid" id="options-box"></div>
+        <button id="next-btn" onclick="nextQuestion()">Siguiente →</button>
+    </div>
+
+    <div class="container results-screen" id="results-container">
+        <h2>Test Finalizado</h2>
+        <div id="score-text"></div>
+        <div class="percentage" id="score-percent"></div>
+        <button id="restart-btn" style="background:var(--primary); color:white; border:none; padding:15px 30px; border-radius:30px; cursor:pointer; font-weight:bold;" onclick="location.reload()">Reintentar Test</button>
+    </div>
+
+    <script>
+        const database = [
+            { img: "interruptor.png", ans: "Interruptor" },
+            { img: "interruptor bipolar.png", ans: "Interruptor bipolar" },
+            { img: "interruptor tripolar.png", ans: "Interruptor tripolar" },
+            { img: "interruptor-de-tirador.png", ans: "Interruptor de tirador" },
+            { img: "interruptor-regulador.png", ans: "Interruptor regulador" },
+            { img: "interruptor-doble.png", ans: "Interruptor doble" },
+            { img: "conmutador.png", ans: "Conmutador" },
+            { img: "conmutador-de-cruce.png", ans: "Conmutador de cruce" },
+            { img: "pulsador.png", ans: "Pulsador" },
+            { img: "pulsadores-sb-de-persianas.png", ans: "Pulsadores s/b de persianas" },
+            { img: "interruptores-sb-de-persianas.png", ans: "Interruptores s/b de persianas" },
+            { img: "toma-de-corriente-bipolar-con-toma-tierra.png", ans: "Toma de corriente bipolar con T.T." },
+            { img: "toma-de-corriente-bipolar-25A-con-toma-tierra.png", ans: "Toma de corriente 25A con T.T." },
+            { img: "toma-de-corriente-trifasica.png", ans: "Toma de corriente trifásica" },
+            { img: "clavija-de-enchufe.png", ans: "Clavija de enchufe" },
+            { img: "punto-de-luz.png", ans: "Punto de luz" },
+            { img: "grupo-de-5-lamparas-de-40w.png", ans: "Grupo de 5 lámparas de 40W" },
+            { img: "punto-de-luz-mural.png", ans: "Punto de luz mural" },
+            { img: "punto-de-luz-con-tirador.png", ans: "Punto de luz con tirador" },
+            { img: "punto-de-luz-de-fluorescencia.png", ans: "Punto de luz fluorescente" },
+            { img: "grupo-de-2-fluorescentes-de-40w.png", ans: "Grupo de 2 fluorescentes de 40W" },
+            { img: "punto-de-luz-autonomo.png", ans: "Punto de luz autónomo" },
+            { img: "timbre.png", ans: "Timbre" },
+            { img: "zumbador.png", ans: "Zumbador" },
+            { img: "timbre-de-dos-golpes.png", ans: "Timbre de dos golpes" },
+            { img: "indicador-de-llamadas.png", ans: "Indicador de llamadas" },
+            { img: "caja-de-registro.png", ans: "Caja de registro" },
+            { img: "caja-de-paso.png", ans: "Caja de paso" },
+            { img: "interruptor-de-control-de-potencia.png", ans: "ICP" },
+            { img: "cuadro-general-de-distribucion.png", ans: "Cuadro general de distribución" },
+            { img: "fusible.png", ans: "Fusible" },
+            { img: "interruptor-automatico-magnetotermico.png", ans: "Magnetotérmico" },
+            { img: "interruptor-diferencial.png", ans: "Interruptor diferencial" },
+            { img: "caja-general-de-proteccion.png", ans: "C.G.P." },
+            { img: "linea-repartidora-montada.png", ans: "Línea repartidora montada" },
+            { img: "canalizacion-de-derivaciones-individuales.png", ans: "Canalización derivaciones indiv." },
+            { img: "derivacion-individual.png", ans: "Derivación individual" },
+            { img: "centralizacion-searada-de-contadores-trifasicos.png", ans: "Contadores trifásicos" },
+            { img: "centralizacion-de-contadores.png", ans: "Centralización de contadores" },
+            { img: "contador.png", ans: "Contador" },
+            { img: "termostato.png", ans: "Termostato" },
+            { img: "rele-detector-ir.png", ans: "Relé detector IR" },
+            { img: "detector-crepuscular.png", ans: "Detector crepuscular" },
+            { img: "detector-solar.png", ans: "Detector solar" },
+            { img: "rele-eolico.png", ans: "Relé eólico" },
+            { img: "emisor-de-ir.png", ans: "Emisor de IR" },
+            { img: "receptor-de-ir.png", ans: "Receptor de IR" },
+            { img: "dispositivo-de-seguridad-con-llave.png", ans: "Dispositivo de seguridad con llave" },
+            { img: "elemento-calefactor.png", ans: "Elemento calefactor" },
+            { img: "motor.png", ans: "Motor" },
+            { img: "ventilador.png", ans: "Ventilador" },
+            { img: "refrigerador-o-frigorifico.png", ans: "Frigorífico" },
+            { img: "congelador.png", ans: "Congelador" },
+            { img: "lavadora.png", ans: "Lavadora" },
+            { img: "lavavajillas.png", ans: "Lavavajillas" },
+            { img: "cocina-electrica.png", ans: "Cocina eléctrica" },
+            { img: "calentador-electrico.png", ans: "Calentador eléctrico" }
+        ];
+
+        let currentIndex = 0, score = 0, shuffled = [];
+
+        function init() {
+            shuffled = [...database].sort(() => Math.random() - 0.5);
+            render();
+        }
+
+        function render() {
+            const q = shuffled[currentIndex];
+            document.getElementById("current-idx").innerText = currentIndex + 1;
+            document.getElementById("image-box").innerHTML = `<img src="img/${q.img}" class="quiz-img">`;
+            
+            let options = [q.ans];
+            while(options.length < 4) {
+                let r = database[Math.floor(Math.random()*database.length)].ans;
+                if(!options.includes(r)) options.push(r);
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            const box = document.getElementById("options-box");
+            box.innerHTML = "";
+            options.forEach(opt => {
+                const b = document.createElement("button");
+                b.innerText = opt;
+                b.onclick = () => {
+                    const all = box.querySelectorAll("button");
+                    all.forEach(btn => {
+                        btn.disabled = true;
+                        if(btn.innerText === q.ans) btn.classList.add("correct");
+                    });
+                    if(opt === q.ans) { score++; } else { b.classList.add("incorrect"); }
+                    document.getElementById("next-btn").style.display = "inline-block";
+                };
+                box.appendChild(b);
+            });
+            document.getElementById("next-btn").style.display = "none";
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if(currentIndex < shuffled.length) render();
+            else {
+                document.getElementById("quiz-container").style.display = "none";
+                document.getElementById("results-container").style.display = "block";
+                document.getElementById("score-text").innerText = `Aciertos: ${score} de ${shuffled.length}`;
+                document.getElementById("score-percent").innerText = (score/shuffled.length*100).toFixed(1) + "%";
+            }
+        }
+        init();
+    </script>
+</body>
+</html>
