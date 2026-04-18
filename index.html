@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.5">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="es"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Quiz de Simbología Unifilar&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>:root { --primary: #2563eb; --success: #22c55e; --error: #ef4444; --bg: #f8fafc; --text: #1e293b; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.container { width: 100%; max-width: 600px; text-align: center; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.progress { margin-bottom: 15px; font-weight: bold; color: #64748b; font-size: 1.1rem; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.image-box { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 20px; min-height: 200px; display: flex; justify-content: center; align-items: center; border: 2px solid #e2e8f0; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.quiz-img { max-width: 100%; max-height: 280px; object-fit: contain; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.options-grid { display: grid; gap: 12px; grid-template-columns: 1fr; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>@media (min-width: 480px) { .options-grid { grid-template-columns: 1fr 1fr; } }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button { padding: 18px 10px; font-size: 0.95rem; border: 2px solid #e2e8f0; border-radius: 12px; background: white; cursor: pointer; transition: all 0.2s; color: var(--text); font-weight: 500; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button:hover:not(:disabled) { border-color: var(--primary); background: #eff6ff; transform: translateY(-2px); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button:disabled { cursor: default; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button.correct { background: var(--success) !important; color: white; border-color: var(--success); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button.incorrect { background: var(--error) !important; color: white; border-color: var(--error); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#next-btn { margin-top: 25px; background: var(--primary); color: white; border: none; padding: 15px 50px; border-radius: 30px; cursor: pointer; display: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.results-screen { display: none; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.percentage { font-size: 3.5rem; font-weight: bold; color: var(--primary); margin: 15px 0; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container" id="quiz-container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="progress"&gt;Pregunta &lt;span id="current-idx"&gt;1&lt;/span&gt; de 57&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="image-box" id="image-box"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="options-grid" id="options-box"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="next-btn" onclick="nextQuestion()"&gt;Siguiente →&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="container results-screen" id="results-container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Test Finalizado&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="score-text"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="percentage" id="score-percent"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="restart-btn" style="background:var(--primary); color:white; border:none; padding:15px 30px; border-radius:30px; cursor:pointer; font-weight:bold;" onclick="location.reload()"&gt;Reintentar Test&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const database = [</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "interruptor.png", ans: "Interruptor" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "interruptor bipolar.png", ans: "Interruptor bipolar" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "interruptor tripolar.png", ans: "Interruptor tripolar" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "interruptor-de-tirador.png", ans: "Interruptor de tirador" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "interruptor-regulador.png", ans: "Interruptor regulador" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "interruptor-doble.png", ans: "Interruptor doble" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "conmutador.png", ans: "Conmutador" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "conmutador-de-cruce.png", ans: "Conmutador de cruce" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "pulsador.png", ans: "Pulsador" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "pulsadores-sb-de-persianas.png", ans: "Pulsadores s/b de persianas" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "interruptores-sb-de-persianas.png", ans: "Interruptores s/b de persianas" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "toma-de-corriente-bipolar-con-toma-tierra.png", ans: "Toma de corriente bipolar con T.T." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "toma-de-corriente-bipolar-25A-con-toma-tierra.png", ans: "Toma de corriente 25A con T.T." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "toma-de-corriente-trifasica.png", ans: "Toma de corriente trifásica" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "clavija-de-enchufe.png", ans: "Clavija de enchufe" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "punto-de-luz.png", ans: "Punto de luz" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "grupo-de-5-lamparas-de-40w.png", ans: "Grupo de 5 lámparas de 40W" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "punto-de-luz-mural.png", ans: "Punto de luz mural" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "punto-de-luz-con-tirador.png", ans: "Punto de luz con tirador" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "punto-de-luz-de-fluorescencia.png", ans: "Punto de luz fluorescente" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "grupo-de-2-fluorescentes-de-40w.png", ans: "Grupo de 2 fluorescentes de 40W" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "punto-de-luz-autonomo.png", ans: "Punto de luz autónomo" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "timbre.png", ans: "Timbre" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "zumbador.png", ans: "Zumbador" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "timbre-de-dos-golpes.png", ans: "Timbre de dos golpes" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "indicador-de-llamadas.png", ans: "Indicador de llamadas" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "caja-de-registro.png", ans: "Caja de registro" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "caja-de-paso.png", ans: "Caja de paso" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "interruptor-de-control-de-potencia.png", ans: "ICP" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "cuadro-general-de-distribucion.png", ans: "Cuadro general de distribución" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "fusible.png", ans: "Fusible" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "interruptor-automatico-magnetotermico.png", ans: "Magnetotérmico" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "interruptor-diferencial.png", ans: "Interruptor diferencial" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "caja-general-de-proteccion.png", ans: "C.G.P." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "linea-repartidora-montada.png", ans: "Línea repartidora montada" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "canalizacion-de-derivaciones-individuales.png", ans: "Canalización derivaciones indiv." },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "derivacion-individual.png", ans: "Derivación individual" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "centralizacion-searada-de-contadores-trifasicos.png", ans: "Contadores trifásicos" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "centralizacion-de-contadores.png", ans: "Centralización de contadores" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "contador.png", ans: "Contador" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "termostato.png", ans: "Termostato" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "rele-detector-ir.png", ans: "Relé detector IR" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "detector-crepuscular.png", ans: "Detector crepuscular" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "detector-solar.png", ans: "Detector solar" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "rele-eolico.png", ans: "Relé eólico" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "emisor-de-ir.png", ans: "Emisor de IR" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "receptor-de-ir.png", ans: "Receptor de IR" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "dispositivo-de-seguridad-con-llave.png", ans: "Dispositivo de seguridad con llave" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "elemento-calefactor.png", ans: "Elemento calefactor" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "motor.png", ans: "Motor" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "ventilador.png", ans: "Ventilador" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "refrigerador-o-frigorifico.png", ans: "Frigorífico" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "congelador.png", ans: "Congelador" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "lavadora.png", ans: "Lavadora" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "lavavajillas.png", ans: "Lavavajillas" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "cocina-electrica.png", ans: "Cocina eléctrica" },</p>
+<p class="p1"><span class="Apple-converted-space">            </span>{ img: "calentador-electrico.png", ans: "Calentador eléctrico" }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>let currentIndex = 0, score = 0, shuffled = [];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function init() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>shuffled = [...database].sort(() =&gt; Math.random() - 0.5);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>render();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function render() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const q = shuffled[currentIndex];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById("current-idx").innerText = currentIndex + 1;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById("image-box").innerHTML = `&lt;img src="img/${q.img}" class="quiz-img"&gt;`;</p>
+<p class="p2"><span class="Apple-converted-space">            </span></p>
+<p class="p1"><span class="Apple-converted-space">            </span>let options = [q.ans];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>while(options.length &lt; 4) {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>let r = database[Math.floor(Math.random()*database.length)].ans;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>if(!options.includes(r)) options.push(r);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>options.sort(() =&gt; Math.random() - 0.5);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">            </span>const box = document.getElementById("options-box");</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box.innerHTML = "";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>options.forEach(opt =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>const b = document.createElement("button");</p>
+<p class="p1"><span class="Apple-converted-space">                </span>b.innerText = opt;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>b.onclick = () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>const all = box.querySelectorAll("button");</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>all.forEach(btn =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>btn.disabled = true;</p>
+<p class="p1"><span class="Apple-converted-space">                        </span>if(btn.innerText === q.ans) btn.classList.add("correct");</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>if(opt === q.ans) { score++; } else { b.classList.add("incorrect"); }</p>
+<p class="p1"><span class="Apple-converted-space">                    </span>document.getElementById("next-btn").style.display = "inline-block";</p>
+<p class="p1"><span class="Apple-converted-space">                </span>};</p>
+<p class="p1"><span class="Apple-converted-space">                </span>box.appendChild(b);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>});</p>
+<p class="p1"><span class="Apple-converted-space">            </span>document.getElementById("next-btn").style.display = "none";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>function nextQuestion() {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentIndex++;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if(currentIndex &lt; shuffled.length) render();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>else {</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById("quiz-container").style.display = "none";</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById("results-container").style.display = "block";</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById("score-text").innerText = `Aciertos: ${score} de ${shuffled.length}`;</p>
+<p class="p1"><span class="Apple-converted-space">                </span>document.getElementById("score-percent").innerText = (score/shuffled.length*100).toFixed(1) + "%";</p>
+<p class="p1"><span class="Apple-converted-space">            </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>init();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
